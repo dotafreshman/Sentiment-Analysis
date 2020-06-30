@@ -1,34 +1,28 @@
-from snownlp import SnowNLP
+# from snownlp import SnowNLP
 import jieba
-# from mySnownlp import SnowNLP
+from mySnownlp import SnowNLP
 import pandas as pd
 import openpyxl
 
 # text = '这个东西不是一般好'
-s=SnowNLP('差得要死')
-print(s.sentiments)
 
 
-# f=pd.read_excel("2_organize.xlsx",names=['text']);
+
+f=pd.read_excel("../a3_xlsx_file/kai-jieba-seg.xls");
 
 
-# new_table=f
+new_table=f
 
 
+# new_table['token']=new_table.apply(lambda x: jieba.lcut(x['seg']),axis=1)
+
+
+# print(type(f['seg'][1].split(' ')))
 ###predict tag
-# new_table['tag']=new_table.apply(lambda x:1 if SnowNLP(x['text']).sentiments>0.5 else 0,axis=1)
-# print(new_table)
-# new_table.to_excel('out1_tag.xlsx')
+new_table['score']=new_table.apply(lambda x:SnowNLP("一",x['seg'].split(' ')).mySent,axis=1)
+new_table['pred']=new_table.apply(lambda x:1 if SnowNLP("一",x['seg'].split(' ')).mySent>0.5 else 0,axis=1)
 
 
-###tokenize
-# print(len(f))
-# print(type(f))
-# new_table['token']=new_table.apply(lambda x:SnowNLP(x['text']).words,axis=1)
-# print(new_table)
-# new_table.to_excel('out2_token.xlsx')
 
 
-# new_table['score']=new_table.apply(lambda x:SnowNLP(x['text']).sentiments,axis=1)
-# print(new_table)
-# new_table.to_excel('out3_score.xlsx')
+new_table.to_excel('jiebaOut.xlsx')
